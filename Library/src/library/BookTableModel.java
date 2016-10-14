@@ -13,7 +13,9 @@ import java.util.Vector;
  */
 public class BookTableModel extends DefaultTableModel {
     
-    public BookTableModel() {
+    
+    
+    public BookTableModel() {        
         super.addColumn("BookObjID");
         super.addColumn("Title");
         super.addColumn("Author");

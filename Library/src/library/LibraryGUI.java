@@ -80,9 +80,9 @@ public class LibraryGUI extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         bookTable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        listAllBooks = new javax.swing.JButton();
+        listLoanedBooks = new javax.swing.JButton();
+        listAvailableBooks = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         addBook = new javax.swing.JButton();
         addMember = new javax.swing.JButton();
@@ -152,20 +152,31 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         bookTable.setModel(bookTableModel);
         bookTable.setColumnSelectionAllowed(true);
+        bookTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         bookTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(bookTable);
         bookTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jButton4.setText("List All Books");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        listAllBooks.setText("List All Books");
+        listAllBooks.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                listAllBooksActionPerformed(evt);
             }
         });
 
-        jButton5.setText("List Loaned Books");
+        listLoanedBooks.setText("List Loaned Books");
+        listLoanedBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listLoanedBooksActionPerformed(evt);
+            }
+        });
 
-        jButton6.setText("List Available Books");
+        listAvailableBooks.setText("List Available Books");
+        listAvailableBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listAvailableBooksActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -173,19 +184,19 @@ public class LibraryGUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(listAllBooks, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(listAvailableBooks, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                    .addComponent(listLoanedBooks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jButton4)
+                .addComponent(listAllBooks)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5)
+                .addComponent(listLoanedBooks)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton6)
+                .addComponent(listAvailableBooks)
                 .addGap(0, 19, Short.MAX_VALUE))
         );
 
@@ -264,9 +275,33 @@ public class LibraryGUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_returnBookActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void listAllBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listAllBooksActionPerformed
+        bookTableModel.updateBookSet(holdings);
+    }//GEN-LAST:event_listAllBooksActionPerformed
+
+    private void listLoanedBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listLoanedBooksActionPerformed
+        SetOfBooks loanedBooks = new SetOfBooks();
+        
+        for (Book tmp : holdings)
+        {
+            if (tmp.isOnLoan() == true)
+                loanedBooks.add(tmp);
+        }
+        
+        bookTableModel.updateBookSet(loanedBooks);
+    }//GEN-LAST:event_listLoanedBooksActionPerformed
+
+    private void listAvailableBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listAvailableBooksActionPerformed
+        SetOfBooks availableBooks = new SetOfBooks();
+        
+        for (Book tmp : holdings)
+        {
+            if (tmp.isOnLoan() == false)
+                availableBooks.add(tmp);
+        }
+        
+        bookTableModel.updateBookSet(availableBooks);
+    }//GEN-LAST:event_listAvailableBooksActionPerformed
 
     /**
     * @param args the command line arguments
@@ -287,9 +322,6 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JButton addMember;
     private javax.swing.JTable bookTable;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -298,6 +330,9 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton listAllBooks;
+    private javax.swing.JButton listAvailableBooks;
+    private javax.swing.JButton listLoanedBooks;
     private javax.swing.JButton loanBook;
     private javax.swing.JList memberList;
     private javax.swing.JButton returnBook;
