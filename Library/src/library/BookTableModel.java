@@ -19,7 +19,7 @@ public class BookTableModel extends DefaultTableModel {
         super.addColumn("Author");
         super.addColumn("ISBN");
         super.addColumn("Accession Number");
-        super.addColumn("On Loan");
+        super.addColumn("Status");
     }
     
     public void updateBookSet(SetOfBooks books) {
@@ -30,11 +30,11 @@ public class BookTableModel extends DefaultTableModel {
         /* Add all the new books */
         for (Book tmp : books)
         {
-            addBook(tmp);
+            addBookToTable(tmp);
         }
     }
     
-    private void addBook(Book book) {
+    private void addBookToTable(Book book) {
         Vector row = new Vector();
         
         row.add(book);
@@ -42,7 +42,12 @@ public class BookTableModel extends DefaultTableModel {
         row.add(book.getAuthor());
         row.add(book.getISBN());
         row.add(book.getAccessionNumber());
-        row.add(Boolean.toString(book.isOnLoan()));
+        
+        if (book.isOnLoan())
+            row.add("Loaned To: " + book.getBorrower().getMemberName());
+        else
+            row.add("Available");
+        
         this.addRow(row); 
     }
     
