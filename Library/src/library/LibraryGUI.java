@@ -66,7 +66,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         else
             JOptionPane.showMessageDialog(null, "User already has 3 books on loan", "Error", JOptionPane.ERROR_MESSAGE);
-    }
+    }   
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -220,8 +220,18 @@ public class LibraryGUI extends javax.swing.JFrame {
         );
 
         addBook.setText("Add Book");
+        addBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBookActionPerformed(evt);
+            }
+        });
 
         addMember.setText("Add Member");
+        addMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMemberActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -335,14 +345,19 @@ public class LibraryGUI extends javax.swing.JFrame {
         
         if (selectedBook != null)
         {
-            Member selectedMember = (Member)memberList.getSelectedValue();
-            if (selectedMember != null)
+            if (selectedBook.isOnLoan() == false)
             {
-                /* If we have got here now system tries to approve loan */
-                approveLoan(selectedBook, selectedMember);
+                Member selectedMember = (Member)memberList.getSelectedValue();
+                if (selectedMember != null)
+                {
+                    /* If we have got here now system tries to approve loan */
+                    approveLoan(selectedBook, selectedMember);
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "No member selected", "Error", JOptionPane.ERROR_MESSAGE);
             }
             else
-                JOptionPane.showMessageDialog(null, "No member selected", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Book already loaned out", "Error", JOptionPane.ERROR_MESSAGE);
         }
         else
             JOptionPane.showMessageDialog(null, "Book not selected", "Error", JOptionPane.ERROR_MESSAGE);     
@@ -370,6 +385,33 @@ public class LibraryGUI extends javax.swing.JFrame {
         else
             JOptionPane.showMessageDialog(null, "Book not selected", "Error", JOptionPane.ERROR_MESSAGE);  
     }//GEN-LAST:event_returnBookActionPerformed
+
+    private void addMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMemberActionPerformed
+        String name = JOptionPane.showInputDialog("Please enter the member name");
+        if (name != null)
+        {
+            /* Add new member to array then update GUI list */
+            theMembers.add(new Member(name));
+            memberList.setListData(theMembers.toArray());
+        }
+    }//GEN-LAST:event_addMemberActionPerformed
+
+    private void addBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookActionPerformed
+        String title = JOptionPane.showInputDialog("Please enter the title");
+        if (title != null)
+        {
+            String author = JOptionPane.showInputDialog("Please enter the author");
+            if (author != null)
+            {
+                String ISBN = JOptionPane.showInputDialog("Please enter the author");
+                if (ISBN != null)
+                {
+                    holdings.add(new Book(title, author, ISBN));
+                    bookTableModel.updateBookSet(holdings);
+                }
+            }
+        }
+    }//GEN-LAST:event_addBookActionPerformed
 
     /**
     * @param args the command line arguments
