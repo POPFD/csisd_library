@@ -77,7 +77,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         catch (IOException i)
         {
-            i.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to save members", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -92,7 +92,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         catch (IOException i)
         {
-            i.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to save holdings", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -110,7 +110,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         catch (IOException i)
         {
-            i.printStackTrace();
+
         }
         catch (ClassNotFoundException c)
         {
@@ -134,7 +134,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         }
         catch (IOException i)
         {
-            i.printStackTrace();
+
         }
         catch (ClassNotFoundException c)
         {
@@ -182,6 +182,13 @@ public class LibraryGUI extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         addBook = new javax.swing.JButton();
         addMember = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        searchField = new javax.swing.JTextField();
+        searchByTitle = new javax.swing.JButton();
+        searchByAuthor = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -344,6 +351,77 @@ public class LibraryGUI extends javax.swing.JFrame {
                 .addGap(0, 48, Short.MAX_VALUE))
         );
 
+        jLabel3.setText("Search Value");
+
+        searchByTitle.setText("By Title");
+        searchByTitle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByTitleActionPerformed(evt);
+            }
+        });
+
+        searchByAuthor.setText("By Author");
+        searchByAuthor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByAuthorActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("By ISBN");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("By Accession Number");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchField))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(searchByAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(searchByTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))))
+                .addGap(10, 10, 10))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchByTitle)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchByAuthor)
+                    .addComponent(jButton4))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        jLabel3.getAccessibleContext().setAccessibleName("Search Value");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -356,7 +434,9 @@ public class LibraryGUI extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -381,7 +461,8 @@ public class LibraryGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -515,6 +596,28 @@ public class LibraryGUI extends javax.swing.JFrame {
             saveHoldings();
     }//GEN-LAST:event_formWindowClosing
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Book found = holdings.findBookFromAccNumber(Integer.parseInt(searchField.getText()));
+        SetOfBooks newBooks = new SetOfBooks();
+        newBooks.add(found);
+        bookTableModel.updateBookSet(newBooks);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        SetOfBooks found = holdings.findBookFromISBN(searchField.getText());
+        bookTableModel.updateBookSet(found);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void searchByAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByAuthorActionPerformed
+        SetOfBooks found = holdings.findBookByAuthor(searchField.getText());
+        bookTableModel.updateBookSet(found);
+    }//GEN-LAST:event_searchByAuthorActionPerformed
+
+    private void searchByTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByTitleActionPerformed
+        SetOfBooks found = holdings.findBookFromTitle(searchField.getText());
+        bookTableModel.updateBookSet(found);
+    }//GEN-LAST:event_searchByTitleActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -533,12 +636,16 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JButton addBook;
     private javax.swing.JButton addMember;
     private javax.swing.JTable bookTable;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton listAllBooks;
@@ -548,6 +655,9 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JButton loanBook;
     private javax.swing.JList memberList;
     private javax.swing.JButton returnBook;
+    private javax.swing.JButton searchByAuthor;
+    private javax.swing.JButton searchByTitle;
+    private javax.swing.JTextField searchField;
     // End of variables declaration//GEN-END:variables
 
 

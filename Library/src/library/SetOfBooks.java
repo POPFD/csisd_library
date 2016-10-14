@@ -5,6 +5,7 @@
 package library;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  *
@@ -15,6 +16,10 @@ public class SetOfBooks extends ArrayList<Book> implements java.io.Serializable 
 
     public SetOfBooks(){
         super();
+    }
+    
+    public SetOfBooks(Collection<? extends Book> c) {
+        super(c);
     }
 
     public void addBook(Book aBook){
@@ -31,7 +36,7 @@ public class SetOfBooks extends ArrayList<Book> implements java.io.Serializable 
         /* Iterate through all books in current set, add if author matches */
         for (Book tmp : this)
         {
-            if (tmp.getAuthor().equals(author))
+            if (tmp.getAuthor().contains(author))
                 result.add(tmp);
         }
         
@@ -44,7 +49,7 @@ public class SetOfBooks extends ArrayList<Book> implements java.io.Serializable 
         /* Iterate through all books in current set, add if title matches */
         for (Book tmp : this)
         {
-            if (tmp.getTitle().equals(title))
+            if (tmp.getTitle().contains(title))
                 result.add(tmp);
         }
         
@@ -81,7 +86,7 @@ public class SetOfBooks extends ArrayList<Book> implements java.io.Serializable 
         /* Iterate through all books in current set, add if ISBN matches */
         for (Book tmp : this)
         {
-            if (tmp.getISBN().equals(ISBN))
+            if (tmp.getISBN().contains(ISBN))
                 result.add(tmp);
         }
         
