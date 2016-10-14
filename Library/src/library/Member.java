@@ -5,25 +5,27 @@
 
 package library;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author Kutoma
  */
 public class Member {
-    private String name;
     private int memberNumber;
+    private String name;
     private SetOfBooks currentLoans = new SetOfBooks();
     private static int memberCount = 0;
     
     public Member(String aName){
-     name = aName;
-     memberNumber = memberCount++;
-     currentLoans = new SetOfBooks();
+        name = aName;
+        memberNumber = memberCount++;
+        currentLoans = new SetOfBooks();
     }
 
     public String toString(){
         return Integer.toString(memberNumber) + " " + name;
-        
     }
 
     public void borrowBook(Book aBook){
@@ -31,5 +33,30 @@ public class Member {
         aBook.setBorrower(this);
     }
     
+    public void returnBook(Book aBook) {
+        currentLoans.removeBook(aBook);
+        aBook.setBorrower(null);        
+    }
+    
+    public SetOfBooks getBooksOnLoan() {
+        return currentLoans;
+    }
+    
+    public String getMemberName() {
+        /* 
+         * To preserve encapsulation we use get functions.
+         * This is because we do not want to make name attribute public.
+         */
+        return name;
+    }
+    
+    public int getMemberNumber() {
+        /* 
+         * To preserve encapsulation we use get functions.
+         * This is because we do not want to make memberNumber attribute public.
+         */
+        return memberNumber;
+    }
+
 }
 
