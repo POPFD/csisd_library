@@ -11,23 +11,33 @@ package library;
  */
 public class Book {
 
+    private String iSBNNumber;
     private String title;
-    private Member borrower = null;
-    private static int bookCount = 0;
+    private String author;
     private int accessionNumber;
+    private Member borrower = null;
+    
+    private static int bookCount = 0;
 
     public Book(String name){
         title = name;
         accessionNumber = bookCount++;
-
     }
 
-    void setBorrower(Member theBorrower) {
+    public void setBorrower(Member theBorrower) {
         borrower = theBorrower;
     }
 
-    Member getBorrower() {
+    public Member getBorrower() {
         return borrower;
     }
-
+    
+    public String toString() {
+        return title + "_" +  Integer.toString(accessionNumber);
+    }
+    
+    public boolean isOnLoan() {
+        return (borrower != null);
+    }
+    
 }

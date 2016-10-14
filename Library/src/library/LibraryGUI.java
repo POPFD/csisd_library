@@ -20,6 +20,8 @@ public class LibraryGUI extends javax.swing.JFrame {
     private SetOfMembers theMembers = new SetOfMembers();
     private SetOfBooks holdings = new SetOfBooks();
     
+    private Book selectedBook = null;
+    private Member selectedMember = null;
 
     /** Creates new form LibraryGUI */
     public LibraryGUI() {
