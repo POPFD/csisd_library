@@ -11,7 +11,7 @@ package library;
  */
 public class Book {
 
-    private String iSBNNumber;
+    private int iSBNNumber;
     private String title;
     private String author;
     private int accessionNumber;
@@ -30,6 +30,26 @@ public class Book {
 
     public Member getBorrower() {
         return borrower;
+    }
+    
+    public int getISBN() {
+        /* 
+         * Originally iSBNNumber was of type string,
+         * It's redudant so I changed it to type int as it is more efficient.
+         */
+        return iSBNNumber;
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public String getAuthor() {
+        return author;
+    }
+    
+    public int getAccessionNumber() {
+        return accessionNumber;
     }
     
     public String toString() {

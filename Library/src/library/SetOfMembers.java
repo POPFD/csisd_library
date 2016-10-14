@@ -15,6 +15,10 @@ import java.util.ArrayList;
  */
 public class SetOfMembers extends ArrayList<Member> {
 
+    public SetOfMembers() {
+        super();
+    }
+    
     public void addMember(Member aMember) {
         super.add(aMember);
     }
@@ -29,7 +33,7 @@ public class SetOfMembers extends ArrayList<Member> {
         /* Iterates through each element in the array and checks name */
         for (Member tmp : this)
         {
-            if (tmp.getMemberName() == name)
+            if (tmp.getMemberName().equals(name))
                 result = tmp;
         }     
         
