@@ -67,13 +67,21 @@ public class SetOfBooks extends ArrayList<Book> {
         return result;
     }
     
-    public SetOfBooks findBookFromISBN(int ISBN) {
+    public SetOfBooks findBookFromISBN(String ISBN) {
         SetOfBooks result = new SetOfBooks();
+        
+        /* 
+         * In the model it says the passed argument should be of type int.
+         * This is incorrect as format for an ISBN is as follows:
+         * 978-3-16-148410-0
+         * Example of ISBN grabbed from 
+         * https://en.wikipedia.org/wiki/International_Standard_Book_Number
+         */
         
         /* Iterate through all books in current set, add if ISBN matches */
         for (Book tmp : this)
         {
-            if (tmp.getISBN() == ISBN)
+            if (tmp.getISBN().equals(ISBN))
                 result.add(tmp);
         }
         

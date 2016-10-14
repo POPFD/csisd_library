@@ -38,11 +38,17 @@ public class LibraryGUI extends javax.swing.JFrame {
         theMembers.addMember(member3);
         theMembers.addMember(member4);
 
-        Book book1 = new Book("book1");
-        Book book2 = new Book("book2");
+        Book book1 = new Book("book1", "author1", "978-3-16-148410-0");
+        Book book2 = new Book("book2", "author1", "978-3-16-148411-0");
+        Book book3 = new Book("book3", "author2", "978-3-16-148412-0");
+        Book book4 = new Book("book4", "author2", "978-3-16-148413-0");
+        Book book5 = new Book("book5", "author3", "978-3-16-148414-0");
 
         holdings.addBook(book1);
         holdings.addBook(book2);
+        holdings.addBook(book3);
+        holdings.addBook(book4);
+        holdings.addBook(book5);
 
         memberList.setListData(theMembers.toArray());
 

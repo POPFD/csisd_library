@@ -11,16 +11,18 @@ package library;
  */
 public class Book {
 
-    private int iSBNNumber;
-    private String title;
-    private String author;
-    private int accessionNumber;
+    private final String iSBNNumber;
+    private final String title;
+    private final String author;
+    private final int accessionNumber;
     private Member borrower = null;
     
     private static int bookCount = 0;
 
-    public Book(String name){
-        title = name;
+    public Book(String newTitle, String newAuthor, String newISBN){
+        title = newTitle;
+        author = newAuthor;
+        iSBNNumber = newISBN;
         accessionNumber = bookCount++;
     }
 
@@ -32,11 +34,7 @@ public class Book {
         return borrower;
     }
     
-    public int getISBN() {
-        /* 
-         * Originally iSBNNumber was of type string,
-         * It's redudant so I changed it to type int as it is more efficient.
-         */
+    public String getISBN() {
         return iSBNNumber;
     }
     

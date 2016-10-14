@@ -13,8 +13,8 @@ import java.util.Set;
  * @author Kutoma
  */
 public class Member {
-    private int memberNumber;
-    private String name;
+    private final int memberNumber;
+    private final String name;
     private SetOfBooks currentLoans = new SetOfBooks();
     private static int memberCount = 0;
     
