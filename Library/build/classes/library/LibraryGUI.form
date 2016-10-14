@@ -130,7 +130,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButton1" pref="153" max="32767" attributes="0"/>
+                  <Component id="listMemberBooks" pref="153" max="32767" attributes="0"/>
                   <Component id="returnBook" max="32767" attributes="0"/>
                   <Component id="loanBook" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -142,7 +142,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="returnBook" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <Component id="listMemberBooks" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -152,6 +152,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Loan Book"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loanBookActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="returnBook">
               <Properties>
@@ -161,10 +164,13 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="returnBookActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton1">
+            <Component class="javax.swing.JButton" name="listMemberBooks">
               <Properties>
-                <Property name="text" type="java.lang.String" value="View Loaned Books"/>
+                <Property name="label" type="java.lang.String" value="List Member Books"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listMemberBooksActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

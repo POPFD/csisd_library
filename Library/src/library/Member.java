@@ -29,8 +29,8 @@ public class Member {
     }
 
     public void borrowBook(Book aBook){
-        currentLoans.addBook(aBook);
         aBook.setBorrower(this);
+        currentLoans.addBook(aBook);
     }
     
     public void returnBook(Book aBook) {

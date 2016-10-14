@@ -10,6 +10,7 @@
  */
 
 package library;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,10 +20,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     
     private SetOfMembers theMembers = new SetOfMembers();
     private SetOfBooks holdings = new SetOfBooks();
-    
-    private Book selectedBook = null;
-    private Member selectedMember = null;
-    
+       
     /* Table Model that will hold all our books */
     private BookTableModel bookTableModel = new BookTableModel();
     
@@ -59,6 +57,17 @@ public class LibraryGUI extends javax.swing.JFrame {
         bookTableModel.updateBookSet(holdings);
     }
     
+    private void approveLoan(Book book, Member member)
+    {
+        if (member.getBooksOnLoan().size() < 3)
+        {
+            member.borrowBook(book);
+            bookTableModel.updateBookSet(holdings);
+        }
+        else
+            JOptionPane.showMessageDialog(null, "User already has 3 books on loan", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -74,7 +83,7 @@ public class LibraryGUI extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         loanBook = new javax.swing.JButton();
         returnBook = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        listMemberBooks = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -98,6 +107,11 @@ public class LibraryGUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(memberList);
 
         loanBook.setText("Loan Book");
+        loanBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loanBookActionPerformed(evt);
+            }
+        });
 
         returnBook.setText("Return Book");
         returnBook.addActionListener(new java.awt.event.ActionListener() {
@@ -106,13 +120,18 @@ public class LibraryGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("View Loaned Books");
+        listMemberBooks.setLabel("List Member Books");
+        listMemberBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listMemberBooksActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+            .addComponent(listMemberBooks, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
             .addComponent(returnBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(loanBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -123,7 +142,7 @@ public class LibraryGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(returnBook)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1))
+                .addComponent(listMemberBooks))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -270,11 +289,6 @@ public class LibraryGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void returnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBookActionPerformed
-        System.out.println("the button has been pressed - perhaps you should write some code to do something");
-
-    }//GEN-LAST:event_returnBookActionPerformed
-
     private void listAllBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listAllBooksActionPerformed
         bookTableModel.updateBookSet(holdings);
     }//GEN-LAST:event_listAllBooksActionPerformed
@@ -303,6 +317,60 @@ public class LibraryGUI extends javax.swing.JFrame {
         bookTableModel.updateBookSet(availableBooks);
     }//GEN-LAST:event_listAvailableBooksActionPerformed
 
+    private void listMemberBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listMemberBooksActionPerformed
+        Member selectedMember = (Member)memberList.getSelectedValue();
+        
+        if (selectedMember != null)
+            bookTableModel.updateBookSet(selectedMember.getBooksOnLoan());
+        else
+            JOptionPane.showMessageDialog(null, "No member selected", "Error", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_listMemberBooksActionPerformed
+
+    private void loanBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanBookActionPerformed
+
+        Book selectedBook = null;
+        /* Get the selected Book from table (object stored in column 0) */ 
+        if (bookTable.getSelectedRow() != -1)
+            selectedBook = (Book)bookTable.getValueAt(bookTable.getSelectedRow(), 0);
+        
+        if (selectedBook != null)
+        {
+            Member selectedMember = (Member)memberList.getSelectedValue();
+            if (selectedMember != null)
+            {
+                /* If we have got here now system tries to approve loan */
+                approveLoan(selectedBook, selectedMember);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "No member selected", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Book not selected", "Error", JOptionPane.ERROR_MESSAGE);     
+    }//GEN-LAST:event_loanBookActionPerformed
+
+    private void returnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBookActionPerformed
+        Book selectedBook = null;
+        /* Get the selected Book from table (object stored in column 0) */ 
+        if (bookTable.getSelectedRow() != -1)
+            selectedBook = (Book)bookTable.getValueAt(bookTable.getSelectedRow(), 0);
+        
+        if (selectedBook != null)
+        {
+            if (selectedBook.isOnLoan() == true)
+            {
+                Member currentBorrower = selectedBook.getBorrower();
+                
+                /* Return the selected book and update table */
+                currentBorrower.returnBook(selectedBook);
+                bookTableModel.updateBookSet(holdings);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Book is not on loan", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Book not selected", "Error", JOptionPane.ERROR_MESSAGE);  
+    }//GEN-LAST:event_returnBookActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -321,7 +389,6 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JButton addBook;
     private javax.swing.JButton addMember;
     private javax.swing.JTable bookTable;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -333,6 +400,7 @@ public class LibraryGUI extends javax.swing.JFrame {
     private javax.swing.JButton listAllBooks;
     private javax.swing.JButton listAvailableBooks;
     private javax.swing.JButton listLoanedBooks;
+    private javax.swing.JButton listMemberBooks;
     private javax.swing.JButton loanBook;
     private javax.swing.JList memberList;
     private javax.swing.JButton returnBook;
