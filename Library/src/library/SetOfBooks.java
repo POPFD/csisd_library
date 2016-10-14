@@ -10,7 +10,7 @@ import java.util.ArrayList;
  *
  * @author Kutoma
  */
-public class SetOfBooks extends ArrayList<Book> {
+public class SetOfBooks extends ArrayList<Book> implements java.io.Serializable {
 
 
     public SetOfBooks(){

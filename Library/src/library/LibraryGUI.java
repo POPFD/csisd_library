@@ -11,12 +11,16 @@
 
 package library;
 import javax.swing.JOptionPane;
+import java.io.*;
 
 /**
  *
  * @author Kutoma
  */
 public class LibraryGUI extends javax.swing.JFrame {
+    
+    private static String BOOKS_FILE = "books.dat";
+    private static String MEMBERS_FILE = "members.dat";
     
     private SetOfMembers theMembers = new SetOfMembers();
     private SetOfBooks holdings = new SetOfBooks();
@@ -29,6 +33,16 @@ public class LibraryGUI extends javax.swing.JFrame {
 
         initComponents();
         
+        if ((loadMembers() == false) || (loadHoldings() == false))
+            loadDefaultData();
+
+        memberList.setListData(theMembers.toArray());
+        
+        /* This method loads ALL the books in the library into our GUI table */
+        bookTableModel.updateBookSet(holdings);
+    }
+    
+    private void loadDefaultData() {
         Member member1 = new Member("Jane");
         Member member2 = new Member("Amir");
         Member member3 = new Member("Astrid");
@@ -50,15 +64,88 @@ public class LibraryGUI extends javax.swing.JFrame {
         holdings.addBook(book3);
         holdings.addBook(book4);
         holdings.addBook(book5);
-
-        memberList.setListData(theMembers.toArray());
-        
-        /* This method loads ALL the books in the library into our GUI table */
-        bookTableModel.updateBookSet(holdings);
+    }
+       
+    private void saveMembers() {
+        try 
+        {
+            FileOutputStream fileOut = new FileOutputStream(MEMBERS_FILE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(theMembers);
+            out.close();
+            fileOut.close();
+        }
+        catch (IOException i)
+        {
+            i.printStackTrace();
+        }
     }
     
-    private void approveLoan(Book book, Member member)
-    {
+    private void saveHoldings() {
+        try 
+        {
+            FileOutputStream fileOut = new FileOutputStream(BOOKS_FILE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(holdings);
+            out.close();
+            fileOut.close();
+        }
+        catch (IOException i)
+        {
+            i.printStackTrace();
+        }
+    }
+    
+    private boolean loadMembers() {
+        boolean result = false;
+        
+        try
+        {
+            FileInputStream fileIn = new FileInputStream(MEMBERS_FILE);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            theMembers = (SetOfMembers)in.readObject();
+            in.close();
+            fileIn.close();
+            result = true;
+        }
+        catch (IOException i)
+        {
+            i.printStackTrace();
+        }
+        catch (ClassNotFoundException c)
+        {
+
+        }
+        
+        return result;
+    }
+    
+    private boolean loadHoldings() {
+        boolean result = false;
+        
+        try
+        {
+            FileInputStream fileIn = new FileInputStream(BOOKS_FILE);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            holdings = (SetOfBooks)in.readObject();
+            in.close();
+            fileIn.close();
+            result = true;
+        }
+        catch (IOException i)
+        {
+            i.printStackTrace();
+        }
+        catch (ClassNotFoundException c)
+        {
+
+        }
+        
+        return result;
+    }
+    
+    
+    private void approveLoan(Book book, Member member) {
         if (member.getBooksOnLoan().size() < 3)
         {
             member.borrowBook(book);
@@ -97,6 +184,11 @@ public class LibraryGUI extends javax.swing.JFrame {
         addMember = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         memberList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -403,7 +495,7 @@ public class LibraryGUI extends javax.swing.JFrame {
             String author = JOptionPane.showInputDialog("Please enter the author");
             if (author != null)
             {
-                String ISBN = JOptionPane.showInputDialog("Please enter the author");
+                String ISBN = JOptionPane.showInputDialog("Please enter the ISBN");
                 if (ISBN != null)
                 {
                     holdings.add(new Book(title, author, ISBN));
@@ -412,6 +504,16 @@ public class LibraryGUI extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_addBookActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        /* If members and holdings arrays aren't empty save members to disk */
+        
+        if (theMembers.size() != 0)
+            saveMembers();
+        
+        if (holdings.size() != 0)
+            saveHoldings();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
     * @param args the command line arguments

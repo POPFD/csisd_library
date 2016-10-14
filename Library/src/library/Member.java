@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @author Kutoma
  */
-public class Member {
+public class Member implements java.io.Serializable {
     private final int memberNumber;
     private final String name;
     private SetOfBooks currentLoans = new SetOfBooks();

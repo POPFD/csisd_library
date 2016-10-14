@@ -9,7 +9,7 @@ package library;
  *
  * @author Kutoma
  */
-public class Book {
+public class Book implements java.io.Serializable {
 
     private final String iSBNNumber;
     private final String title;

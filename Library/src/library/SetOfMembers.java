@@ -7,13 +7,11 @@ package library;
 
 import java.util.ArrayList;
 
-
-
 /**
  *
  * @author Kutoma
  */
-public class SetOfMembers extends ArrayList<Member> {
+public class SetOfMembers extends ArrayList<Member> implements java.io.Serializable {
 
     public SetOfMembers() {
         super();
@@ -52,6 +50,5 @@ public class SetOfMembers extends ArrayList<Member> {
         
         return result;
     }
-    
-
+       
 }
