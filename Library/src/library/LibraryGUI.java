@@ -10,22 +10,39 @@
  */
 
 package library;
+import javax.swing.JOptionPane;
+import java.io.*;
 
 /**
  *
  * @author Kutoma
  */
 public class LibraryGUI extends javax.swing.JFrame {
-
+    
+    private static String BOOKS_FILE = "books.dat";
+    private static String MEMBERS_FILE = "members.dat";
+    
     private SetOfMembers theMembers = new SetOfMembers();
     private SetOfBooks holdings = new SetOfBooks();
+       
+    /* Table Model that will hold all our books */
+    private BookTableModel bookTableModel = new BookTableModel();
     
-
     /** Creates new form LibraryGUI */
     public LibraryGUI() {
 
         initComponents();
         
+        if ((loadMembers() == false) || (loadHoldings() == false))
+            loadDefaultData();
+
+        memberList.setListData(theMembers.toArray());
+        
+        /* This method loads ALL the books in the library into our GUI table */
+        bookTableModel.updateBookSet(holdings);
+    }
+    
+    private void loadDefaultData() {
         Member member1 = new Member("Jane");
         Member member2 = new Member("Amir");
         Member member3 = new Member("Astrid");
@@ -36,21 +53,108 @@ public class LibraryGUI extends javax.swing.JFrame {
         theMembers.addMember(member3);
         theMembers.addMember(member4);
 
-        Book book1 = new Book("book1");
-        Book book2 = new Book("book2");
+        Book book1 = new Book("book1", "author1", "978-3-16-148410-0");
+        Book book2 = new Book("book2", "author1", "978-3-16-148411-0");
+        Book book3 = new Book("book3", "author2", "978-3-16-148412-0");
+        Book book4 = new Book("book4", "author2", "978-3-16-148413-0");
+        Book book5 = new Book("book5", "author3", "978-3-16-148414-0");
 
         holdings.addBook(book1);
         holdings.addBook(book2);
-
-        memberList.setListData(theMembers.toArray());
-
-
-
+        holdings.addBook(book3);
+        holdings.addBook(book4);
+        holdings.addBook(book5);
     }
+       
+    private void saveMembers() {
+        try 
+        {
+            FileOutputStream fileOut = new FileOutputStream(MEMBERS_FILE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(theMembers);
+            out.close();
+            fileOut.close();
+        }
+        catch (IOException i)
+        {
+            JOptionPane.showMessageDialog(null, "Failed to save members", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void saveHoldings() {
+        try 
+        {
+            FileOutputStream fileOut = new FileOutputStream(BOOKS_FILE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(holdings);
+            out.close();
+            fileOut.close();
+        }
+        catch (IOException i)
+        {
+            JOptionPane.showMessageDialog(null, "Failed to save holdings", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private boolean loadMembers() {
+        boolean result = false;
+        
+        try
+        {
+            FileInputStream fileIn = new FileInputStream(MEMBERS_FILE);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            theMembers = (SetOfMembers)in.readObject();
+            in.close();
+            fileIn.close();
+            result = true;
+        }
+        catch (IOException i)
+        {
 
-   
+        }
+        catch (ClassNotFoundException c)
+        {
 
+        }
+        
+        return result;
+    }
+    
+    private boolean loadHoldings() {
+        boolean result = false;
+        
+        try
+        {
+            FileInputStream fileIn = new FileInputStream(BOOKS_FILE);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            holdings = (SetOfBooks)in.readObject();
+            in.close();
+            fileIn.close();
+            result = true;
+        }
+        catch (IOException i)
+        {
 
+        }
+        catch (ClassNotFoundException c)
+        {
+
+        }
+        
+        return result;
+    }
+    
+    
+    private void approveLoan(Book book, Member member) {
+        if (member.getBooksOnLoan().size() < 3)
+        {
+            member.borrowBook(book);
+            bookTableModel.updateBookSet(holdings);
+        }
+        else
+            JOptionPane.showMessageDialog(null, "User already has 3 books on loan", "Error", JOptionPane.ERROR_MESSAGE);
+    }   
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -61,27 +165,35 @@ public class LibraryGUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        theButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         memberList = new javax.swing.JList();
+        jPanel4 = new javax.swing.JPanel();
+        loanBook = new javax.swing.JButton();
+        returnBook = new javax.swing.JButton();
+        listMemberBooks = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        bookTable = new javax.swing.JTable();
+        jPanel2 = new javax.swing.JPanel();
+        listAllBooks = new javax.swing.JButton();
+        listLoanedBooks = new javax.swing.JButton();
+        listAvailableBooks = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        addBook = new javax.swing.JButton();
+        addMember = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        searchField = new javax.swing.JTextField();
+        searchByTitle = new javax.swing.JButton();
+        searchByAuthor = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 6, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
-        theButton.setText("tehButton");
-        theButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                theButtonActionPerformed(evt);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -90,47 +202,421 @@ public class LibraryGUI extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        memberList.setName(""); // NOI18N
         jScrollPane1.setViewportView(memberList);
+
+        loanBook.setText("Loan Book");
+        loanBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loanBookActionPerformed(evt);
+            }
+        });
+
+        returnBook.setText("Return Book");
+        returnBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                returnBookActionPerformed(evt);
+            }
+        });
+
+        listMemberBooks.setLabel("List Member Books");
+        listMemberBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listMemberBooksActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(listMemberBooks, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+            .addComponent(returnBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(loanBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(loanBook)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(returnBook)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(listMemberBooks))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel1.setText("Members");
+
+        jLabel2.setText("All Books In Library");
+
+        bookTable.setModel(bookTableModel);
+        bookTable.setColumnSelectionAllowed(true);
+        bookTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        bookTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(bookTable);
+        bookTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        listAllBooks.setText("List All Books");
+        listAllBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listAllBooksActionPerformed(evt);
+            }
+        });
+
+        listLoanedBooks.setText("List Loaned Books");
+        listLoanedBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listLoanedBooksActionPerformed(evt);
+            }
+        });
+
+        listAvailableBooks.setText("List Available Books");
+        listAvailableBooks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listAvailableBooksActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(listAllBooks, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(listAvailableBooks, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                    .addComponent(listLoanedBooks, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(listAllBooks)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(listLoanedBooks)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(listAvailableBooks)
+                .addGap(0, 19, Short.MAX_VALUE))
+        );
+
+        addBook.setText("Add Book");
+        addBook.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBookActionPerformed(evt);
+            }
+        });
+
+        addMember.setText("Add Member");
+        addMember.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMemberActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(addBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addMember, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
+                .addGap(0, 11, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(addBook)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addMember)
+                .addGap(0, 48, Short.MAX_VALUE))
+        );
+
+        jLabel3.setText("Search Value");
+
+        searchByTitle.setText("By Title");
+        searchByTitle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByTitleActionPerformed(evt);
+            }
+        });
+
+        searchByAuthor.setText("By Author");
+        searchByAuthor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchByAuthorActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("By ISBN");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("By Accession Number");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(searchField))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(searchByAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(searchByTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))))
+                .addGap(10, 10, 10))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchByTitle)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchByAuthor)
+                    .addComponent(jButton4))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        jLabel3.getAccessibleContext().setAccessibleName("Search Value");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(274, 274, 274)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(158, 158, 158))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(170, 170, 170)
-                .addComponent(theButton)
-                .addContainerGap(229, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 544, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(77, 77, 77))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(221, 221, 221)
-                .addComponent(theButton)
-                .addContainerGap(56, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap(166, Short.MAX_VALUE))))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jLabel2.getAccessibleContext().setAccessibleName("Books");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void theButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_theButtonActionPerformed
-        System.out.println("the button has been pressed - perhaps you should write some code to do something");
+    private void listAllBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listAllBooksActionPerformed
+        bookTableModel.updateBookSet(holdings);
+    }//GEN-LAST:event_listAllBooksActionPerformed
 
-    }//GEN-LAST:event_theButtonActionPerformed
+    private void listLoanedBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listLoanedBooksActionPerformed
+        SetOfBooks loanedBooks = new SetOfBooks();
+        
+        for (Book tmp : holdings)
+        {
+            if (tmp.isOnLoan() == true)
+                loanedBooks.add(tmp);
+        }
+        
+        bookTableModel.updateBookSet(loanedBooks);
+    }//GEN-LAST:event_listLoanedBooksActionPerformed
+
+    private void listAvailableBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listAvailableBooksActionPerformed
+        SetOfBooks availableBooks = new SetOfBooks();
+        
+        for (Book tmp : holdings)
+        {
+            if (tmp.isOnLoan() == false)
+                availableBooks.add(tmp);
+        }
+        
+        bookTableModel.updateBookSet(availableBooks);
+    }//GEN-LAST:event_listAvailableBooksActionPerformed
+
+    private void listMemberBooksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listMemberBooksActionPerformed
+        Member selectedMember = (Member)memberList.getSelectedValue();
+        
+        if (selectedMember != null)
+            bookTableModel.updateBookSet(selectedMember.getBooksOnLoan());
+        else
+            JOptionPane.showMessageDialog(null, "No member selected", "Error", JOptionPane.ERROR_MESSAGE);
+    }//GEN-LAST:event_listMemberBooksActionPerformed
+
+    private void loanBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loanBookActionPerformed
+
+        Book selectedBook = null;
+        /* Get the selected Book from table (object stored in column 0) */ 
+        if (bookTable.getSelectedRow() != -1)
+            selectedBook = (Book)bookTable.getValueAt(bookTable.getSelectedRow(), 0);
+        
+        if (selectedBook != null)
+        {
+            if (selectedBook.isOnLoan() == false)
+            {
+                Member selectedMember = (Member)memberList.getSelectedValue();
+                if (selectedMember != null)
+                {
+                    /* If we have got here now system tries to approve loan */
+                    approveLoan(selectedBook, selectedMember);
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "No member selected", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Book already loaned out", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Book not selected", "Error", JOptionPane.ERROR_MESSAGE);     
+    }//GEN-LAST:event_loanBookActionPerformed
+
+    private void returnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnBookActionPerformed
+        Book selectedBook = null;
+        /* Get the selected Book from table (object stored in column 0) */ 
+        if (bookTable.getSelectedRow() != -1)
+            selectedBook = (Book)bookTable.getValueAt(bookTable.getSelectedRow(), 0);
+        
+        if (selectedBook != null)
+        {
+            if (selectedBook.isOnLoan() == true)
+            {
+                Member currentBorrower = selectedBook.getBorrower();
+                
+                /* Return the selected book and update table */
+                currentBorrower.returnBook(selectedBook);
+                bookTableModel.updateBookSet(holdings);
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Book is not on loan", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Book not selected", "Error", JOptionPane.ERROR_MESSAGE);  
+    }//GEN-LAST:event_returnBookActionPerformed
+
+    private void addMemberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMemberActionPerformed
+        String name = JOptionPane.showInputDialog("Please enter the member name");
+        if (name != null)
+        {
+            /* Add new member to array then update GUI list */
+            theMembers.add(new Member(name));
+            memberList.setListData(theMembers.toArray());
+        }
+    }//GEN-LAST:event_addMemberActionPerformed
+
+    private void addBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookActionPerformed
+        String title = JOptionPane.showInputDialog("Please enter the title");
+        if (title != null)
+        {
+            String author = JOptionPane.showInputDialog("Please enter the author");
+            if (author != null)
+            {
+                String ISBN = JOptionPane.showInputDialog("Please enter the ISBN");
+                if (ISBN != null)
+                {
+                    holdings.add(new Book(title, author, ISBN));
+                    bookTableModel.updateBookSet(holdings);
+                }
+            }
+        }
+    }//GEN-LAST:event_addBookActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        /* If members and holdings arrays aren't empty save members to disk */
+        
+        if (theMembers.size() != 0)
+            saveMembers();
+        
+        if (holdings.size() != 0)
+            saveHoldings();
+    }//GEN-LAST:event_formWindowClosing
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        Book found = holdings.findBookFromAccNumber(Integer.parseInt(searchField.getText()));
+        SetOfBooks newBooks = new SetOfBooks();
+        newBooks.add(found);
+        bookTableModel.updateBookSet(newBooks);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        SetOfBooks found = holdings.findBookFromISBN(searchField.getText());
+        bookTableModel.updateBookSet(found);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void searchByAuthorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByAuthorActionPerformed
+        SetOfBooks found = holdings.findBookByAuthor(searchField.getText());
+        bookTableModel.updateBookSet(found);
+    }//GEN-LAST:event_searchByAuthorActionPerformed
+
+    private void searchByTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchByTitleActionPerformed
+        SetOfBooks found = holdings.findBookFromTitle(searchField.getText());
+        bookTableModel.updateBookSet(found);
+    }//GEN-LAST:event_searchByTitleActionPerformed
 
     /**
     * @param args the command line arguments
@@ -147,10 +633,31 @@ public class LibraryGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addBook;
+    private javax.swing.JButton addMember;
+    private javax.swing.JTable bookTable;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton listAllBooks;
+    private javax.swing.JButton listAvailableBooks;
+    private javax.swing.JButton listLoanedBooks;
+    private javax.swing.JButton listMemberBooks;
+    private javax.swing.JButton loanBook;
     private javax.swing.JList memberList;
-    private javax.swing.JButton theButton;
+    private javax.swing.JButton returnBook;
+    private javax.swing.JButton searchByAuthor;
+    private javax.swing.JButton searchByTitle;
+    private javax.swing.JTextField searchField;
     // End of variables declaration//GEN-END:variables
 
 

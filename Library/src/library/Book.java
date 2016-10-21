@@ -9,25 +9,53 @@ package library;
  *
  * @author Kutoma
  */
-public class Book {
+public class Book implements java.io.Serializable {
 
-    private String title;
+    private final String iSBNNumber;
+    private final String title;
+    private final String author;
+    private final int accessionNumber;
     private Member borrower = null;
+    
     private static int bookCount = 0;
-    private int accessionNumber;
 
-    public Book(String name){
-        title = name;
+    public Book(String newTitle, String newAuthor, String newISBN){
+        title = newTitle;
+        author = newAuthor;
+        iSBNNumber = newISBN;
         accessionNumber = bookCount++;
-
     }
 
-    void setBorrower(Member theBorrower) {
+    public void setBorrower(Member theBorrower) {
         borrower = theBorrower;
     }
 
-    Member getBorrower() {
+    public Member getBorrower() {
         return borrower;
     }
-
+    
+    public String getISBN() {
+        return iSBNNumber;
+    }
+    
+    public String getTitle() {
+        return title;
+    }
+    
+    public String getAuthor() {
+        return author;
+    }
+    
+    public int getAccessionNumber() {
+        return accessionNumber;
+    }
+    
+    public String toString() {
+        return title + "_" +  Integer.toString(accessionNumber);
+    }
+    
+    public boolean isOnLoan() {
+        return (borrower != null);
+    }
+    
 }
